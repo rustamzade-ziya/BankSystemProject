@@ -266,9 +266,12 @@ public class TransferServiceImpl implements TransferService {
 
     private TransferResponse handleCreditToCreditTransferWithFee(CreditCard sender, CreditCard receiver,
                                                                  BigDecimal amount, String userEmail) {
-        if (!sender.getCurrency().equals(receiver.getCurrency())) {
-            return createErrorResponse("Currency mismatch");
-        }
+
+        BigDecimal convertedAmount = currencyConversionService.convert(
+                amount,
+                sender.getCurrency(),
+                receiver.getCurrency()
+        );
 
         BigDecimal fee = amount.multiply(CREDIT_CARD_FEE_PERCENT);
         BigDecimal totalAmount = amount.add(fee);
