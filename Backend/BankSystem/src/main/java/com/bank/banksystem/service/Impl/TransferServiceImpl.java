@@ -195,7 +195,7 @@ public class TransferServiceImpl implements TransferService {
         }
 
         sender.setBalance(sender.getBalance().subtract(amount));
-        receiver.setBalance(receiver.getBalance().add(amount));
+        receiver.setBalance(receiver.getBalance().add(convertedAmount));
 
         debitCardRepository.save(sender);
         creditCardRepository.save(receiver);
