@@ -101,8 +101,37 @@ CREATE TABLE otp (
     blocked_until TIMESTAMP
 );
 
+CREATE TABLE currency_exchange_rate (
+    rate_id SERIAL PRIMARY KEY,
+    currency_from VARCHAR(3) NOT NULL,
+    currency_to VARCHAR(3) NOT NULL,
+    rate NUMERIC(12,6) NOT NULL,
+    UNIQUE (currency_from, currency_to)
+);
+
 INSERT INTO service (service_name, service_type, service_description)
 VALUES 
 ('Azerqaz', 'Gas', 'An entity that receives natural gas from supply points, distributes it, and sells it within the territory of the Republic of Azerbaijan.'),
 ('Azersu', 'Water', 'Azersu Open Joint Stock Company is in charge of policy and strategy for the water supply and sanitation services in Azerbaijan.'),
 ('Azerishiq', 'Electricity', 'Azerishiq is the Baku electrical grid operator.');
+
+INSERT INTO currency_exchange_rate (currency_from, currency_to, rate) VALUES
+-- AZN base
+('AZN', 'USD', 0.588235),
+('AZN', 'EUR', 0.540540),
+('AZN', 'RUB', 54.000000),
+
+-- USD base
+('USD', 'AZN', 1.700000),
+('USD', 'EUR', 0.920000),
+('USD', 'RUB', 92.000000),
+
+-- EUR base
+('EUR', 'AZN', 1.850000),
+('EUR', 'USD', 1.087000),
+('EUR', 'RUB', 100.000000),
+
+-- RUB base
+('RUB', 'AZN', 0.018500),
+('RUB', 'USD', 0.010870),
+('RUB', 'EUR', 0.010000);
