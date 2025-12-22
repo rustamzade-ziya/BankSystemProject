@@ -35,10 +35,15 @@ public class TransferServiceImpl implements TransferService {
     private static final BigDecimal CREDIT_CARD_FEE_PERCENT = new BigDecimal("0.01"); // 1%
     private static final BigDecimal EXTERNAL_TRANSFER_FEE_PERCENT = new BigDecimal("0.005"); // 0.5%
 
-    public TransferServiceImpl(DebitCardRepository debitCardRepository, CreditCardRepository creditCardRepository,
-                               TransactionHistoryRepository transactionHistoryRepository,
-                               TransactionService transactionService,
-                               EmailService emailService, UserRepository userRepository) {
+    public TransferServiceImpl(
+            DebitCardRepository debitCardRepository,
+            CreditCardRepository creditCardRepository,
+            TransactionHistoryRepository transactionHistoryRepository,
+            TransactionService transactionService,
+            EmailService emailService,
+            UserRepository userRepository,
+            CurrencyConversionService currencyConversionService
+    ) {
         this.creditCardRepository = creditCardRepository;
         this.debitCardRepository = debitCardRepository;
         this.transactionHistoryRepository = transactionHistoryRepository;
