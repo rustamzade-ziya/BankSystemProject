@@ -342,6 +342,7 @@ public class TransferServiceImpl implements TransferService {
         return createSuccessResponse(String.format("Transfer to external completed. Fee: %s", fee));
     }
 
+    // ------------------- Validation -------------------
 
     private boolean isDebitCardValid(String expiryDate) {
         if (expiryDate == null || expiryDate.trim().isEmpty()) return false;
