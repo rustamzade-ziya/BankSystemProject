@@ -183,9 +183,13 @@ public class TransferServiceImpl implements TransferService {
     private TransferResponse handleInternalDebitToCreditTransfer(DebitCard sender, CreditCard receiver,
                                                                  BigDecimal amount, String userEmail) {
 
-        if (!sender.getD_currency().equals(receiver.getCurrency())) {
-            return createErrorResponse("Currency mismatch");
-        }
+        // Convert if currencies differ
+        BigDecimal convertedAmount = currencyConversionService.convert(
+                amount,
+                sender.getD_currency(),
+                receiver.getCurrency()
+        );
+
         if (sender.getBalance().compareTo(amount) < 0) {
             return createErrorResponse("Insufficient funds");
         }
