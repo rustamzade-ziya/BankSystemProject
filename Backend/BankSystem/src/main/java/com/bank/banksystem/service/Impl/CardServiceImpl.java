@@ -1,6 +1,5 @@
 package com.bank.banksystem.service.Impl;
 
-
 import com.bank.banksystem.dto.response.CardDashboardResponse;
 import com.bank.banksystem.dto.response.CashbackCardDashboardDetailsResponse;
 import com.bank.banksystem.dto.response.CreditCardDashboardDetailsResponse;
@@ -29,7 +28,6 @@ public class CardServiceImpl implements ICardService {
     @Autowired
     private CashbackRepository cashbackRepository;
 
-
     @Override
     public List<Object> getUserCards(Long userId) {
         List<Object> allCards = new ArrayList<>();
@@ -49,9 +47,12 @@ public class CardServiceImpl implements ICardService {
         }
 
         Optional<Cashback> cashbackCard = cashbackRepository.findByUserId(userId);
-        CardDashboardResponse cdResponse = new CardDashboardResponse();
-        BeanUtils.copyProperties(cashbackCard, cdResponse);
-        allCards.add(cdResponse);
+        if (cashbackCard.isPresent()) {
+            CardDashboardResponse cdResponse = new CardDashboardResponse();
+            BeanUtils.copyProperties(cashbackCard.get(), cdResponse);
+            cdResponse.setCardId(cashbackCard.get().getCashbackId());
+            allCards.add(cdResponse);
+        }
 
         return allCards;
     }
@@ -90,30 +91,24 @@ public class CardServiceImpl implements ICardService {
 
     @Override
     public boolean setCurrentCard(Long cardId, Long userId) {
-
-        for(DebitCard debitCard : debitCardRepository.findByUserId(userId)){
-            if(debitCard.getCardId().equals(cardId)){
+        for (DebitCard debitCard : debitCardRepository.findByUserId(userId)) {
+            if (debitCard.getCardId().equals(cardId)) {
                 return true;
-            }else{
-                new RuntimeException("Debit Card not found");
             }
         }
 
-        for(CreditCard creditCard : creditCardRepository.findByUserId(userId)){
-            if(creditCard.getCardId().equals(cardId)){
+        for (CreditCard creditCard : creditCardRepository.findByUserId(userId)) {
+            if (creditCard.getCardId().equals(cardId)) {
                 return true;
-            }else{
-                new RuntimeException("Credit Card not found");
             }
         }
 
         Optional<Cashback> cashback = cashbackRepository.findByUserId(userId);
-        if(cashback.isPresent()){
+        if (cashback.isPresent() && cashback.get().getCashbackId().equals(cardId)) {
             return true;
-        }else{
-            new RuntimeException("Cashback not found");
         }
-        return false;
+
+        throw new RuntimeException("Card not found for user or does not belong to user");
     }
 
     public Object getCardDetails(Long cardId, Long userId) {
@@ -121,28 +116,37 @@ public class CardServiceImpl implements ICardService {
             DebitCardDashboardDetailsResponse debitResp = new DebitCardDashboardDetailsResponse();
             DebitCard debitCard = debitCardRepository.findByCardId(cardId).orElse(null);
             if (debitCard != null && debitCard.getUser().getUser_id().equals(userId)) {
-                    BeanUtils.copyProperties(debitCard, debitResp);
-                    return debitResp;
+                BeanUtils.copyProperties(debitCard, debitResp);
+                debitResp.setCurrency(debitCard.getD_currency());
+                debitResp.setCvv(debitCard.getD_cvv());
+                debitResp.setExpiry_date(debitCard.getD_expiry_date());
+                debitResp.setStatus(debitCard.getD_status());
+                return debitResp;
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
 
         try {
             CreditCardDashboardDetailsResponse creditResp = new CreditCardDashboardDetailsResponse();
             CreditCard creditCard = creditCardRepository.findByCardId(cardId).orElse(null);
             if (creditCard != null && creditCard.getUser().getUser_id().equals(userId)) {
                 BeanUtils.copyProperties(creditCard, creditResp);
+                creditResp.setCardId(String.valueOf(creditCard.getCardId()));
                 return creditResp;
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
 
         try {
             CashbackCardDashboardDetailsResponse cashbackResp = new CashbackCardDashboardDetailsResponse();
             Cashback cashback = cashbackRepository.findByUserId(userId).orElse(null);
             if (cashback != null) {
                 BeanUtils.copyProperties(cashback, cashbackResp);
+                cashbackResp.setCardId(cashback.getCashbackId());
                 return cashbackResp;
             }
-        } catch (Exception ignored) {}
+        } catch (Exception ignored) {
+        }
 
         throw new RuntimeException("Card not found or does not belong to this user");
     }

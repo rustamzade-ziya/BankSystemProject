@@ -14,25 +14,25 @@ import java.util.Optional;
 @Repository
 public interface CashbackRepository extends JpaRepository<Cashback, Long> {
 
-        // Find cashback by user ID
-        @Query(value = "SELECT * FROM cashback_information WHERE user_id = :userId", nativeQuery = true)
-        Optional<Cashback> findByUserId(@Param("userId") Long userId);
+    // Find cashback by user ID
+    @Query(value = "SELECT * FROM cashback_information WHERE user_id = :userId", nativeQuery = true)
+    Optional<Cashback> findByUserId(@Param("userId") Long userId);
 
-        // Update cashback balance
-        @Modifying(clearAutomatically = true)
-        @Transactional
-        @Query(value = "UPDATE cashback_information SET cb_balance = :balance WHERE user_id = :userId", nativeQuery = true)
-        void updateBalance(@Param("userId") Long userId, @Param("balance") BigDecimal balance);
+    // Update cashback balance
+    @Modifying(clearAutomatically = true)
+    @Transactional
+    @Query(value = "UPDATE cashback_information SET cb_balance = :balance WHERE user_id = :userId", nativeQuery = true)
+    void updateBalance(@Param("userId") Long userId, @Param("balance") BigDecimal balance);
 
-        // Add to cashback balance
-        @Modifying(clearAutomatically = true)
-        @Transactional
-        @Query(value = "UPDATE cashback_information SET cb_balance = cb_balance + :amount WHERE user_id = :userId", nativeQuery = true)
-        void addToBalance(@Param("userId") Long userId, @Param("amount") BigDecimal amount);
+    // Add to cashback balance
+    @Modifying(clearAutomatically = true)
+    @Transactional
+    @Query(value = "UPDATE cashback_information SET cb_balance = cb_balance + :amount WHERE user_id = :userId", nativeQuery = true)
+    void addToBalance(@Param("userId") Long userId, @Param("amount") BigDecimal amount);
 
-        // Subtract from cashback balance (use cashback)
-        @Modifying(clearAutomatically = true)
-        @Transactional
-        @Query(value = "UPDATE cashback_information SET cb_balance = cb_balance - :amount WHERE user_id = :userId", nativeQuery = true)
-        void subtractFromBalance(@Param("userId") Long userId, @Param("amount") BigDecimal amount);
+    // Subtract from cashback balance (use cashback)
+    @Modifying(clearAutomatically = true)
+    @Transactional
+    @Query(value = "UPDATE cashback_information SET cb_balance = cb_balance - :amount WHERE user_id = :userId", nativeQuery = true)
+    void subtractFromBalance(@Param("userId") Long userId, @Param("amount") BigDecimal amount);
 }

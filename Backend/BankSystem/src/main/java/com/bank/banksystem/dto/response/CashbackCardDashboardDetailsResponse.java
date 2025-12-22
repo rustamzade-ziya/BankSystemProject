@@ -1,6 +1,5 @@
 package com.bank.banksystem.dto.response;
 
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,6 +15,4 @@ public class CashbackCardDashboardDetailsResponse {
     private Long cardId;
 
     private BigDecimal balance;
-
-    private BigDecimal cashbackPercent;
 }
