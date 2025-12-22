@@ -86,7 +86,6 @@ public class PaymentService {
             debit.setBalance(balance.subtract(amount));
             debitCardRepository.save(debit);
 
-
             transactionService.createTransaction(
                     cardId,
                     debit.getUser().getUser_id(),
@@ -97,25 +96,29 @@ public class PaymentService {
                     amount,
                     debit.getD_currency(),
                     debit.getD_currency(),
-                    BigDecimal.ZERO
-            );
+                    BigDecimal.ZERO);
 
             // Create transaction object for receipt
             TransactionHistory transaction = new TransactionHistory(
-                    cardId,           // senderId
-                    null,             // senderUserId (we don't have it here)
-                    null,             // receiverId
-                    null,             // receiverUserId
-                    "PAYMENT",        // type
-                    amount,           // amount
-                    amount,           // convertedAmount (same as amount for payment)
-                    BigDecimal.ZERO,  // fee
-                    null,             // senderCurrency (unknown here)
-                    null              // receiverCurrency (unknown here)
+                    cardId, // senderId
+                    null, // senderUserId (we don't have it here)
+                    null, // receiverId
+                    null, // receiverUserId
+                    "PAYMENT", // type
+                    amount, // amount
+                    amount, // convertedAmount (same as amount for payment)
+                    BigDecimal.ZERO, // fee
+                    null, // senderCurrency (unknown here)
+                    null // receiverCurrency (unknown here)
             );
 
-// Send receipt email
-            emailService.sendReceiptEmail(userEmail, cardId, null, "PAYMENT", amount, amount, debit.getD_currency(), debit.getD_currency(), BigDecimal.ZERO);
+            // Send receipt email
+            try {
+                emailService.sendReceiptEmail(userEmail, cardId, null, "PAYMENT", amount, amount, debit.getD_currency(),
+                        debit.getD_currency(), BigDecimal.ZERO);
+            } catch (Exception e) {
+                System.err.println("Failed to send receipt email: " + e.getMessage());
+            }
 
             BigDecimal cashbackAmount = BigDecimal.ZERO;
             try {
@@ -167,7 +170,6 @@ public class PaymentService {
             credit.setBalance(balance.subtract(amount));
             creditCardRepository.save(credit);
 
-
             transactionService.createTransaction(
                     cardId,
                     credit.getUser().getUser_id(),
@@ -178,26 +180,29 @@ public class PaymentService {
                     amount,
                     credit.getCurrency(),
                     credit.getCurrency(),
-                    BigDecimal.ZERO
-            );
+                    BigDecimal.ZERO);
 
             // Create transaction object for receipt
             TransactionHistory transaction = new TransactionHistory(
-                    cardId,           // senderId
-                    null,             // senderUserId (we don't have it here)
-                    null,             // receiverId
-                    null,             // receiverUserId
-                    "PAYMENT",        // type
-                    amount,           // amount
-                    amount,           // convertedAmount (same as amount for payment)
-                    BigDecimal.ZERO,  // fee
-                    null,             // senderCurrency (unknown here)
-                    null              // receiverCurrency (unknown here)
+                    cardId, // senderId
+                    null, // senderUserId (we don't have it here)
+                    null, // receiverId
+                    null, // receiverUserId
+                    "PAYMENT", // type
+                    amount, // amount
+                    amount, // convertedAmount (same as amount for payment)
+                    BigDecimal.ZERO, // fee
+                    null, // senderCurrency (unknown here)
+                    null // receiverCurrency (unknown here)
             );
 
-// Send receipt email
-            emailService.sendReceiptEmail(userEmail, cardId, null, "PAYMENT", amount, amount,credit.getCurrency(), credit.getCurrency(), BigDecimal.ZERO);
-
+            // Send receipt email
+            try {
+                emailService.sendReceiptEmail(userEmail, cardId, null, "PAYMENT", amount, amount, credit.getCurrency(),
+                        credit.getCurrency(), BigDecimal.ZERO);
+            } catch (Exception e) {
+                System.err.println("Failed to send receipt email: " + e.getMessage());
+            }
 
             return "Payment successful";
         }

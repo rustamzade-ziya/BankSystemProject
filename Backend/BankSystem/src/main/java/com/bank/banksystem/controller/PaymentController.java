@@ -10,17 +10,17 @@ import org.springframework.web.bind.annotation.*;
 @RequestMapping("/api/payments")
 public class PaymentController {
 
-  @Autowired
-  private PaymentService paymentService;
+    @Autowired
+    private PaymentService paymentService;
 
-  @PostMapping("/pay")
-  public ResponseEntity<String> payForService(@RequestBody PaymentRequest request) {
-    boolean success = Boolean.parseBoolean(paymentService.withdraw(request));
+    @PostMapping("/pay")
+    public ResponseEntity<String> payForService(@RequestBody PaymentRequest request) {
+        String result = paymentService.withdraw(request);
 
-    if (success) {
-      return ResponseEntity.ok("Payment successful for service: " + request.getServiceType());
-    } else {
-      return ResponseEntity.badRequest().body("Payment failed. Check balance or card info.");
+        if (result.startsWith("Payment successful")) {
+            return ResponseEntity.ok(result);
+        } else {
+            return ResponseEntity.badRequest().body(result);
+        }
     }
-  }
 }
