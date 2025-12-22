@@ -30,6 +30,7 @@ public class TransferServiceImpl implements TransferService {
     private final TransactionService transactionService;
     private final EmailService emailService;
     private final UserRepository userRepository;
+    private final CurrencyConversionService currencyConversionService;
 
     // Fee constants
     private static final BigDecimal CREDIT_CARD_FEE_PERCENT = new BigDecimal("0.01"); // 1%
