@@ -148,6 +148,7 @@ public class TransferServiceImpl implements TransferService {
         }
     }
 
+    // ------------------- Internal Transfers with Currency Conversion -------------------
 
     private TransferResponse handleInternalDebitToDebitTransfer(DebitCard sender, DebitCard receiver,
                                                                 BigDecimal amount, String userEmail) {
