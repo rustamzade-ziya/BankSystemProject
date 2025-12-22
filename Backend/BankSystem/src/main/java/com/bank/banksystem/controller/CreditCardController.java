@@ -6,6 +6,13 @@ import com.bank.banksystem.service.CreditCardService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+//{
+//        "userId": 2,
+//        "ppn": "AZE",
+//        "currency": "AZN",
+//        "loanAmount": 3000,
+//        "pin": "1234"
+//        }
 
 @RestController
 @RequestMapping("/api/credit-cards")
