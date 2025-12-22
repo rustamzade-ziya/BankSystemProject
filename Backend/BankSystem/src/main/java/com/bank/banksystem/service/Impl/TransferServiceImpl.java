@@ -210,28 +210,6 @@ public class TransferServiceImpl implements TransferService {
         return createSuccessResponse("Transfer from debit to credit completed. Fee: 0%");
     }
 
-    private TransferResponse handleExternalDebitTransfer(DebitCard sender, Long receiverAccountNumber,
-                                                         BigDecimal amount, String userEmail) {
-        BigDecimal fee = amount.multiply(EXTERNAL_TRANSFER_FEE_PERCENT);
-        BigDecimal totalAmount = amount.add(fee);
-
-        if (sender.getBalance().compareTo(totalAmount) < 0) {
-            return createErrorResponse("Insufficient funds including fee");
-        }
-
-        sender.setBalance(sender.getBalance().subtract(totalAmount));
-        debitCardRepository.save(sender);
-
-        transactionService.createTransaction(sender.getCardId(), sender.getUser().getUser_id(),
-                receiverAccountNumber, null,
-                "DEBIT_TO_EXTERNAL", amount, fee);
-
-        emailService.sendReceiptEmail(userEmail, sender.getCardId(), receiverAccountNumber,
-                "DEBIT_TO_EXTERNAL", amount.toString(), fee.toString());
-
-        return createSuccessResponse(String.format("Transfer to external completed. Fee: %s", fee));
-    }
-
     private TransferResponse handleCreditToDebitTransferWithFee(CreditCard sender, DebitCard receiver,
                                                                 BigDecimal amount, String userEmail) {
 
