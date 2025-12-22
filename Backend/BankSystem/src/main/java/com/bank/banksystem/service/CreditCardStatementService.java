@@ -507,7 +507,7 @@ public class CreditCardStatementService {
         transactionService.createTransaction(
                 cardId, card.getUser().getUser_id(),
                 cardId, card.getUser().getUser_id(),
-                TYPE_INTEREST,
+                TYPE_LATE_FEE,
                 lateFee,
                 null,
                 null,
@@ -570,3 +570,4 @@ public class CreditCardStatementService {
         }
     }
 }
+
