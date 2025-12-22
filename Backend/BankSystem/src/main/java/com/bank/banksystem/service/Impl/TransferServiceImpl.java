@@ -174,7 +174,6 @@ public class TransferServiceImpl implements TransferService {
                 receiver.getCardId(), receiver.getUser().getUser_id(),
                 "DEBIT_TO_DEBIT_INTERNAL", amount, BigDecimal.ZERO);
 
-        // Send receipt email
         emailService.sendReceiptEmail(userEmail, sender.getCardId(), receiver.getCardId(),
                 "DEBIT_TO_DEBIT_INTERNAL", amount.toString(), "0");
 
