@@ -1,0 +1,506 @@
+/* ============================================================
+    COLOR SYSTEM — LIGHT THEME (your palette)
+============================================================ */
+:root {
+     --bg: #FFFFFF;
+     --surface: #a4161a;
+     --surface-2: #161a1d;
+
+     --accent: #000000;
+     --accent-hover: #FFFFFF;
+
+     --text: #111111;
+     --muted: #6b7280;
+
+     --radius: 12px;
+     --shadow: 0 6px 18px rgba(5, 10, 15, 0.06);
+}
+
+/* ============================================================
+    DARK THEME — Inspired by Tinkoff Black
+============================================================ */
+.dark-theme {
+     --bg: #0D0D0D;
+     --surface: #a4161a;
+     --surface-2: #161a1d;
+
+     --accent: #000000;
+     --accent-hover: #FFFFFF;
+
+     --text: #FFFFFF;
+     --muted: #B3B3B3;
+
+     --shadow: 0 8px 30px rgba(0,0,0,0.45);
+}
+
+/* ============================================================
+    BASE
+============================================================ */
+* {
+     box-sizing: border-box;
+}
+
+body {
+     margin: 0;
+     background: var(--bg);
+     color: var(--text);
+     font-family: Inter, Segoe UI, Roboto, Arial, sans-serif;
+     transition: background .25s, color .25s;
+}
+
+img {
+     max-width: 100%;
+     display: block;
+}
+
+.container {
+     width: 92%;
+     max-width: 1180px;
+     margin: auto;
+}
+
+/* ============================================================
+    HEADER
+============================================================ */
+.site-header {
+     background: var(--surface);
+     box-shadow: var(--shadow);
+     position: sticky;
+     top: 0;
+     z-index: 60;
+     transition: background .25s, box-shadow .25s;
+}
+
+.header-grid {
+     display: grid;
+     grid-template-columns: 1fr auto auto;
+     gap: 16px;
+     align-items: center;
+     padding: 18px 0;
+}
+
+.logo img {
+     height: 110px;
+}
+
+/* NAVIGATION */
+.main-nav a {
+     text-decoration: none;
+     margin: 0 12px;
+     color: white;
+     font-weight: 500;
+     transition: color .2s;
+}
+
+.main-nav a:hover {
+     color: var(--accent-hover);
+}
+
+/* AUTH BUTTONS */
+.auth-actions .btn {
+     margin-left: 8px;
+}
+
+/* ============================================================
+    BUTTONS
+============================================================ */
+.btn {
+     display: inline-block;
+     padding: 10px 14px;
+     border-radius: var(--radius);
+     text-decoration: none;
+     font-weight: 600;
+     transition: background .25s, color .25s;
+}
+
+.btn-primary {
+     background: var(--accent);
+     color: #fff;
+}
+
+.btn-primary:hover {
+     background: var(--accent-hover);
+     color: #000000;
+}
+
+.btn-ghost {
+     background: transparent;
+     border: 1px solid rgba(255,255,255,0.3);
+     color: white;
+}
+
+.dark-theme .btn-ghost {
+     border: 1px solid rgba(255,255,255,0.3);
+}
+
+.btn-ghost:hover {
+     background: var(--accent-hover);
+     color: #000000;
+}
+
+/* ============================================================
+    HERO SECTION
+============================================================ */
+.hero {
+     padding: 48px 0;
+}
+
+.hero-grid {
+     display: grid;
+     grid-template-columns: 1fr 360px;
+     gap: 30px;
+     align-items: center;
+}
+
+.hero-left h1 {
+     font-size: 36px;
+     margin: 0 0 12px;
+}
+
+.lead {
+     margin: 0 0 18px;
+     color: var(--muted);
+}
+
+/* ============================================================
+    CARD PREVIEW
+============================================================ */
+.card-preview {
+     width: 320px;
+     height: 180px;
+     padding: 20px;
+     border-radius: 14px;
+     color: white;
+
+     background: linear-gradient(135deg, #2b2b2b, #3b3b3b);
+     box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+
+     display: flex;
+     flex-direction: column;
+     justify-content: space-between;
+
+     transition: transform .18s ease;
+}
+
+.dark-theme .card-preview {
+     background: linear-gradient(135deg, #1C1C1C, #2A2A2A);
+}
+
+.card-chip {
+     width: 44px;
+     height: 28px;
+     background: linear-gradient(90deg,#fff4b8,#ffffff);
+     border-radius: 6px;
+}
+
+/* ============================================================
+    FEATURES GRID
+============================================================ */
+.grid-4 {
+     display: grid;
+     grid-template-columns: repeat(4,1fr);
+     gap: 18px;
+     padding: 36px 0;
+}
+
+.feature {
+     background: var(--surface-2);
+     padding: 22px;
+     border-radius: var(--radius);
+     box-shadow: var(--shadow);
+     transition: background .25s;
+     color: white;
+}
+
+.feature h3 {
+     color: white;
+}
+
+.feature p {
+     color: rgba(255,255,255,0.8);
+}
+
+/* ============================================================
+    EXCHANGE RATES
+============================================================ */
+.rates {
+     padding: 24px 0;
+}
+
+.rates-grid {
+     display: flex;
+     flex-wrap: wrap;
+     gap: 12px;
+}
+
+.rate {
+     background: var(--surface-2);
+     padding: 12px 16px;
+     border-radius: var(--radius);
+     box-shadow: var(--shadow);
+     min-width: 120px;
+     text-align: center;
+     color: white;
+}
+
+/* ============================================================
+    AUTH PAGES (Login / Register)
+============================================================ */
+.auth-grid {
+     display: grid;
+     grid-template-columns: 420px 1fr;
+     gap: 24px;
+     align-items: center;
+}
+
+.auth-card {
+     background: var(--surface);
+     padding: 28px;
+     border-radius: var(--radius);
+     box-shadow: var(--shadow);
+     transition: background .25s;
+}
+
+.auth-side-box {
+     background: var(--surface-2);
+     padding: 26px;
+     border-radius: var(--radius);
+     color: white;
+}
+
+.field {
+     display: block;
+     margin: 14px 0;
+     font-weight: 500;
+     color: var(--text);
+}
+
+.field input {
+     width: 100%;
+     padding: 12px 14px;
+     border-radius: var(--radius);
+     border: 1px solid #ccc;
+     margin-top: 6px;
+     background: var(--bg);
+     color: var(--text);
+}
+
+.dark-theme .field input {
+     border: 1px solid #444;
+     background: var(--bg);
+}
+
+/* ============================================================
+    NEWS
+============================================================ */
+.news-grid {
+     display: grid;
+     grid-template-columns: repeat(3,1fr);
+     gap: 16px;
+}
+
+.news-item {
+     background: var(--surface-2);
+     padding: 18px;
+     border-radius: var(--radius);
+     box-shadow: var(--shadow);
+     color: white;
+}
+
+/* ============================================================
+    RESPONSIVE
+============================================================ */
+@media (max-width: 900px) {
+     .hero-grid {
+         grid-template-columns: 1fr;
+     }
+     .grid-4 {
+         grid-template-columns: repeat(2,1fr);
+     }
+     .auth-grid {
+         grid-template-columns: 1fr;
+     }
+     .news-grid {
+         grid-template-columns: 1fr;
+     }
+}
+
+/* ============================================================
+    PASSWORD
+============================================================ */
+
+.password-wrapper {
+     position: relative;
+     display: flex;
+     align-items: center;
+}
+
+.password-wrapper input {
+     width: 100%;
+     padding-right: 40px;
+}
+
+.password-toggle {
+     position: absolute;
+     right: 10px;
+     background: transparent;
+     border: none;
+     cursor: pointer;
+     font-size: 18px;
+     opacity: 0.6;
+}
+
+.password-toggle:hover {
+    opacity: 1;
+}
+
+/* ============================================================
+    DASHBOARD
+============================================================ */
+
+.dashboard {
+        padding: 40px 0;
+    }
+
+
+.dashboard-grid {
+        display: grid;
+        grid-template-columns: 1fr 300px;
+        gap: 30px;
+    }
+
+.dashboard-section {
+        margin-bottom: 30px;
+    }
+
+.section-title {
+        font-size: 24px;
+        margin-bottom: 20px;
+        color: var(--text);
+    }
+
+.user-info {
+        background: var(--surface-2);
+        padding: 20px;
+        border-radius: var(--radius);
+        color: white;
+        margin-bottom: 20px;
+    }
+
+.user-info h3 {
+        margin-top: 0;
+        color: white;
+    }
+
+.cards-grid {
+       display: grid;
+       grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+       gap: 20px;
+    }
+
+.card-item {
+       background: linear-gradient(135deg, #2b2b2b, #3b3b3b);
+       padding: 20px;
+       border-radius: 14px;
+       color: white;
+       box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+       transition: transform 0.2s;
+       cursor: pointer;
+    }
+
+.dark-theme .card-item {
+       background: linear-gradient(135deg, #1C1C1C, #2A2A2A);
+    }
+
+.card-item:hover {
+       transform: translateY(-5px);
+    }
+
+.card-item.active {
+       border: 2px solid var(--surface);
+    }
+
+.card-chip {
+       width: 44px;
+       height: 28px;
+       background: linear-gradient(90deg,#fff4b8,#ffffff);
+       border-radius: 6px;
+       margin-bottom: 15px;
+    }
+
+.card-number {
+       font-size: 18px;
+       letter-spacing: 2px;
+       margin-bottom: 10px;
+    }
+
+.card-name {
+       font-size: 14px;
+       opacity: 0.8;
+       margin-bottom: 10px;
+    }
+
+.card-balance {
+       font-size: 16px;
+       font-weight: bold;
+    }
+
+.operations-grid {
+       display: grid;
+       grid-template-columns: repeat(2, 1fr);
+       gap: 15px;
+    }
+
+.operation-btn {
+       background: var(--surface-2);
+       padding: 15px;
+       border-radius: var(--radius);
+       color: white;
+       text-align: center;
+       cursor: pointer;
+       transition: background 0.2s;
+    }
+
+.operation-btn:hover {
+       background: var(--surface);
+    }
+
+.recent-transactions {
+       background: var(--surface-2);
+       padding: 20px;
+       border-radius: var(--radius);
+       color: white;
+    }
+
+.transaction-item {
+       display: flex;
+       justify-content: space-between;
+       padding: 10px 0;
+       border-bottom: 1px solid rgba(255,255,255,0.1);
+    }
+
+.transaction-item:last-child {
+       border-bottom: none;
+    }
+
+.transaction-amount.positive {
+       color: #4CAF50;
+    }
+
+.transaction-amount.negative {
+       color: #F44336;
+    }
+
+@media (max-width: 900px) {
+       .dashboard-grid {
+             grid-template-columns: 1fr;
+            }
+
+       .cards-grid {
+             grid-template-columns: 1fr;
+            }
+
+       .operations-grid {
+              grid-template-columns: 1fr;
+            }
+       }

@@ -1,0 +1,33 @@
+version: '3.9'
+
+services:
+  postgres:
+    image: postgres:15
+    container_name: banksystemdatabase
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: bank_db
+      POSTGRES_USER: admin
+      POSTGRES_PASSWORD: admin123
+    # Ensure this host path actually contains schema.sql
+    # If your schema is at BankSystemDatabase/init/schema.sql, use that relative path:
+    volumes:
+      - ./BankSystemDatabase/init:/docker-entrypoint-initdb.d:ro
+      - postgres_data:/var/lib/postgresql/data
+
+  app:
+    build: ./Backend/BankSystem   # set correct build context (where your Dockerfile for app lives)
+    container_name: banksystem_app
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/bank_db
+      SPRING_DATASOURCE_USERNAME: admin
+      SPRING_DATASOURCE_PASSWORD: admin123
+      SPRING_PROFILES_ACTIVE: docker
+    depends_on:
+      - postgres
+
+volumes:
+  postgres_data:

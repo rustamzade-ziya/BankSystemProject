@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Register — Diva Bank</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="theme-light">
+
+<header class="site-header">
+    <div class="container header-grid">
+        <div class="logo">
+            <a href="homepage.html" style="text-decoration: none;">
+                <img src="logo.png" alt="Diva Bank">
+            </a>
+        </div>
+
+        <div class="auth-actions">
+            <button id="themeToggle" class="btn btn-ghost">🌙</button>
+        </div>
+    </div>
+</header>
+
+<main>
+    <section class="container" style="padding: 56px 0;">
+        <div class="auth-card" style="max-width:640px;margin:0 auto;">
+
+            <h2>Create account</h2>
+
+            <form>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 16px;">
+                    <label class="field">
+                        Name
+                        <input type="text" required placeholder="Enter your name:">
+                    </label>
+
+                    <label class="field">
+                        Surname
+                        <input type="text" required placeholder="Enter your surname:">
+                    </label>
+                </div>
+
+                <label class="field">
+                    Phone
+                    <input type="text" placeholder="Enter your mob.phone" id="phoneInput" maxlength="13">
+                </label>
+
+                <label class="field">
+                    Email
+                    <input type="email" required placeholder="Enter your email:">
+                </label>
+
+                <label class="field">
+                    Password
+                    <input type="password" required placeholder="Enter your password:">
+                </label>
+
+                <label class="field">
+                    Confirm Password
+                    <input type="password" required placeholder="Enter your password:">
+                </label>
+
+                <button class="btn btn-primary" type="submit" style="margin-top:12px">
+                    Register
+                </button>
+
+            </form>
+
+
+        </div>
+    </section>
+</main>
+
+<script src="theme.js"></script>
+
+</body>
+</html>
+

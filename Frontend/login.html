@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Login — Diva Bank</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body class="theme-light">
+
+<header class="site-header">
+    <div class="container header-grid">
+        <div class="logo">
+            <a href="homepage.html" style="text-decoration: none;">
+                <img src="logo.png" alt="Diva Bank">
+            </a>
+        </div>
+
+        <div class="auth-actions">
+            <button id="themeToggle" class="btn btn-ghost">🌙</button>
+        </div>
+    </div>
+</header>
+
+<main>
+    <section class="auth container" style="padding: 60px 0;">
+        <div class="auth-grid">
+
+            <div class="auth-card">
+                <h2>Welcome back</h2>
+                <p class="lead">Login to manage your cards and payments.</p>
+
+                <form>
+                    <label class="field">
+                        Email or phone
+                        <input type="text" required>
+                    </label>
+
+                    <label class="field">
+                        Password
+                        <input type="password" required>
+                    </label>
+
+                    <div class="auth-actions-row">
+                        <button class="btn btn-primary" type="submit">Login</button>
+                        <a href="#" class="btn btn-ghost">Forgot?</a>
+                    </div>
+                </form>
+            </div>
+
+            <div class="auth-side">
+                <div class="auth-side-box">
+                    <h3>New here?</h3>
+                    <p>Open an account and get your first card in minutes.</p>
+                    <a class="btn btn-primary" href="register.html">Create account</a>
+                </div>
+            </div>
+
+        </div>
+    </section>
+</main>
+
+<script src="theme.js"></script>
+
+</body>
+</html>
+
