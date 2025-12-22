@@ -8,6 +8,7 @@ import com.bank.banksystem.repository.CreditCardRepository;
 import com.bank.banksystem.repository.DebitCardRepository;
 import com.bank.banksystem.repository.TransactionHistoryRepository;
 import com.bank.banksystem.repository.UserRepository;
+import com.bank.banksystem.service.CurrencyConversionService;
 import com.bank.banksystem.service.EmailService;
 import com.bank.banksystem.service.TransactionService;
 import com.bank.banksystem.service.TransferService;
