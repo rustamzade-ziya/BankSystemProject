@@ -34,6 +34,9 @@ public class PaymentService {
     private CashbackService cashbackService;
 
     @Autowired
+    private CreditCardStatementService statementService;
+
+    @Autowired
     private EmailService emailService; // <<< ADDED FOR RECEIPT
     @Autowired
     private UserRepository userRepository;
@@ -91,7 +94,7 @@ public class PaymentService {
                     debit.getUser().getUser_id(),
                     null,
                     null,
-                    "PAYMENT",
+                    "CREDIT_TO_MERCHANT",
                     amount,
                     amount,
                     debit.getD_currency(),
@@ -104,7 +107,7 @@ public class PaymentService {
                     null, // senderUserId (we don't have it here)
                     null, // receiverId
                     null, // receiverUserId
-                    "PAYMENT", // type
+                    "CREDIT_TO_MERCHANT", // type
                     amount, // amount
                     amount, // convertedAmount (same as amount for payment)
                     BigDecimal.ZERO, // fee
@@ -114,7 +117,7 @@ public class PaymentService {
 
             // Send receipt email
             try {
-                emailService.sendReceiptEmail(userEmail, cardId, null, "PAYMENT", amount, amount, debit.getD_currency(),
+                emailService.sendReceiptEmail(userEmail, cardId, null, "CREDIT_TO_MERCHANT", amount, amount, debit.getD_currency(),
                         debit.getD_currency(), BigDecimal.ZERO);
             } catch (Exception e) {
                 System.err.println("Failed to send receipt email: " + e.getMessage());
@@ -162,12 +165,18 @@ public class PaymentService {
                 return "Payment failed: Invalid card expiry date format";
             }
 
-            BigDecimal balance = credit.getBalance();
-            if (balance == null || balance.compareTo(amount) < 0) {
+            statementService.ensureActiveStatementExists(credit);
+
+            BigDecimal available = credit.getBalance();
+            if (available == null || available.compareTo(amount) < 0) {
                 return "Payment failed: Insufficient balance";
+
             }
 
-            credit.setBalance(balance.subtract(amount));
+            BigDecimal debtBefore = credit.getCurrentDebt() == null ? BigDecimal.ZERO : credit.getCurrentDebt();
+
+            credit.setBalance(available.subtract(amount));
+            credit.setCurrentDebt(debtBefore.add(amount));
             creditCardRepository.save(credit);
 
             transactionService.createTransaction(
@@ -175,7 +184,7 @@ public class PaymentService {
                     credit.getUser().getUser_id(),
                     null,
                     null,
-                    "PAYMENT",
+                    "CREDIT_TO_MERCHANT",
                     amount,
                     amount,
                     credit.getCurrency(),
@@ -188,7 +197,7 @@ public class PaymentService {
                     null, // senderUserId (we don't have it here)
                     null, // receiverId
                     null, // receiverUserId
-                    "PAYMENT", // type
+                    "CREDIT_TO_MERCHANT", // type
                     amount, // amount
                     amount, // convertedAmount (same as amount for payment)
                     BigDecimal.ZERO, // fee
@@ -198,7 +207,7 @@ public class PaymentService {
 
             // Send receipt email
             try {
-                emailService.sendReceiptEmail(userEmail, cardId, null, "PAYMENT", amount, amount, credit.getCurrency(),
+                emailService.sendReceiptEmail(userEmail, cardId, null, "CREDIT_TO_MERCHANT", amount, amount, credit.getCurrency(),
                         credit.getCurrency(), BigDecimal.ZERO);
             } catch (Exception e) {
                 System.err.println("Failed to send receipt email: " + e.getMessage());
