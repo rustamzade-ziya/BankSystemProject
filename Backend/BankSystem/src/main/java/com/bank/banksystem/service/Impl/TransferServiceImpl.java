@@ -170,7 +170,6 @@ public class TransferServiceImpl implements TransferService {
         debitCardRepository.save(sender);
         debitCardRepository.save(receiver);
 
-        // Save transaction history
         transactionService.createTransaction(sender.getCardId(), sender.getUser().getUser_id(),
                 receiver.getCardId(), receiver.getUser().getUser_id(),
                 "DEBIT_TO_DEBIT_INTERNAL", amount, BigDecimal.ZERO);
