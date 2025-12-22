@@ -1,18 +1,29 @@
 package com.bank.banksystem.service;
 
+import com.bank.banksystem.repository.CreditCardRepository;
+import com.bank.banksystem.repository.DebitCardRepository;
+import com.bank.banksystem.repository.UserRepository;
 import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
 import java.math.BigDecimal;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 
 @Service
 public class EmailService {
 
     private final JavaMailSender mailSender;
+    private final DebitCardRepository debitCardRepository;
+    private final UserRepository userRepository;
+    private final CreditCardRepository creditCardRepository;
 
-    public EmailService(JavaMailSender mailSender) {
+    public EmailService(JavaMailSender mailSender, DebitCardRepository debitCardRepository, UserRepository userRepository, CreditCardRepository creditCardRepository) {
         this.mailSender = mailSender;
+        this.debitCardRepository = debitCardRepository;
+        this.userRepository = userRepository;
+        this.creditCardRepository = creditCardRepository;
     }
 
     public void sendOtpEmail(String to, int otpCode) {
@@ -37,12 +48,17 @@ public class EmailService {
             String receiverCurrency,
             BigDecimal fee) {
 
+        LocalDateTime dateTime = LocalDateTime.now();
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+        String formatted = dateTime.format(formatter);
+
         String messageText = "Transaction Type: " + type + "\n" +
                 "Sender Card: " + maskCard(senderCardId) + "\n" +
                 "Receiver Card: " + maskCard(receiverCardId) + "\n" +
                 "Amount: " + amount + " " + senderCurrency + "\n" +
                 "Converted Amount: " + convertedAmount + " " + receiverCurrency + "\n" +
-                "Fee: " + fee;
+                "Fee: " + fee + "\n" +
+                "Time: " + formatted;
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
@@ -50,6 +66,24 @@ public class EmailService {
         message.setText(messageText);
 
         mailSender.send(message);
+
+        if (debitCardRepository.existsByCardId(receiverCardId)) {
+            Long userId = debitCardRepository.getIdbyCardId(receiverCardId);
+            to = userRepository.findEmailbyId(userId);
+            SimpleMailMessage message2 = new SimpleMailMessage();
+            message2.setTo(to);
+            message2.setSubject("Bank Transaction Receipt");
+            message2.setText(messageText);
+            mailSender.send(message2);
+        } else if (creditCardRepository.existsByCardId(receiverCardId)) {
+            Long userId = creditCardRepository.getIdbyCardId(receiverCardId);
+            to = userRepository.findEmailbyId(userId);
+            SimpleMailMessage message2 = new SimpleMailMessage();
+            message2.setTo(to);
+            message2.setSubject("Bank Transaction Receipt");
+            message2.setText(messageText);
+            mailSender.send(message2);
+        }
     }
 
     // mask card number
