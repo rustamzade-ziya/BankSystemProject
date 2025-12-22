@@ -49,16 +49,35 @@ public class TransactionServiceimpl implements TransactionService {
     }
 
     @Override
-    public TransactionResponse createTransaction(Long senderId, Long senderUserId, Long receiverId, Long receiverUserId,
-                                                 String type, BigDecimal amount,
-                                                 BigDecimal fee) {
+    public TransactionResponse createTransaction(
+            Long senderId,
+            Long senderUserId,
+            Long receiverId,
+            Long receiverUserId,
+            String type,
+            BigDecimal amount,
+            BigDecimal convertedAmount,
+            String senderCurrency,
+            String receiverCurrency,
+            BigDecimal fee
+    ) {
 
-        TransactionHistory nt = new TransactionHistory(senderId, senderUserId, receiverId, receiverUserId, type,
-                amount);
+        TransactionHistory nt = new TransactionHistory(
+                senderId,
+                senderUserId,
+                receiverId,
+                receiverUserId,
+                type,
+                amount,
+                convertedAmount,
+                fee,
+                senderCurrency,
+                receiverCurrency
+        );
+
         nt.setFee(fee);
 
         TransactionHistory saved = transactionHistoryRepository.save(nt);
-
         return transfromDto(saved);
     }
 
@@ -69,6 +88,9 @@ public class TransactionServiceimpl implements TransactionService {
                 tr.getReceiverId(),
                 tr.getType(),
                 tr.getAmount(),
+                tr.getConvertedAmount(),
+                tr.getSenderCurrency(),
+                tr.getReceiverCurrency(),
                 tr.getDate());
     }
 }

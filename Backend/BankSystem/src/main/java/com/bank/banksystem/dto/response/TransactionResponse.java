@@ -24,6 +24,12 @@ public class TransactionResponse {
 
     private BigDecimal amount;
 
+    private BigDecimal convertedAmount;   // ✅ added
+
+    private String senderCurrency;       // ✅ added
+
+    private String receiverCurrency;     // ✅ added
+
     private LocalDateTime date;
 
 }

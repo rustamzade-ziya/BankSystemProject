@@ -28,8 +28,21 @@ public class TransactionHistory {
     @Column(name = "tr_type")
     private String type;
 
+    // Sender amount (as you wanted)
     @Column(name = "tr_amount")
     private BigDecimal amount;
+
+    // ✅ NEW
+    @Column(name = "tr_converted_amount")
+    private BigDecimal convertedAmount;
+
+    // ✅ NEW
+    @Column(name = "tr_sender_currency")
+    private String senderCurrency;
+
+    // ✅ NEW
+    @Column(name = "tr_receiver_currency")
+    private String receiverCurrency;
 
     @Column(name = "tr_fee")
     private BigDecimal fee;
@@ -37,23 +50,37 @@ public class TransactionHistory {
     @Column(name = "tr_date", nullable = false)
     private LocalDateTime date;
 
-    // === Constructors ===
     public TransactionHistory() {
-        this.date = LocalDateTime.now(); // по умолчанию текущий timestamp
+        this.date = LocalDateTime.now();
     }
 
-    public TransactionHistory(Long senderId, Long senderUserId, Long receiverId, Long receiverUserId, String type,
-                              BigDecimal amount) {
+    public TransactionHistory(
+            Long senderId,
+            Long senderUserId,
+            Long receiverId,
+            Long receiverUserId,
+            String type,
+            BigDecimal amount,
+            BigDecimal convertedAmount,
+            BigDecimal fee,
+            String senderCurrency,
+            String receiverCurrency
+    ) {
         this.senderId = senderId;
         this.senderUserId = senderUserId;
         this.receiverId = receiverId;
         this.receiverUserId = receiverUserId;
         this.type = type;
         this.amount = amount;
+        this.convertedAmount = convertedAmount;
+        this.fee = fee;
+        this.senderCurrency = senderCurrency;
+        this.receiverCurrency = receiverCurrency;
         this.date = LocalDateTime.now();
     }
 
-    // === Getters & Setters ===
+    // getters & setters (ADD for new fields)
+
     public Long getId() {
         return id;
     }
@@ -78,20 +105,20 @@ public class TransactionHistory {
         this.senderUserId = senderUserId;
     }
 
-    public Long getReceiverId() {
-        return receiverId;
-    }
-
-    public void setReceiverId(Long receiverId) {
-        this.receiverId = receiverId;
-    }
-
     public Long getReceiverUserId() {
         return receiverUserId;
     }
 
     public void setReceiverUserId(Long receiverUserId) {
         this.receiverUserId = receiverUserId;
+    }
+
+    public Long getReceiverId() {
+        return receiverId;
+    }
+
+    public void setReceiverId(Long receiverId) {
+        this.receiverId = receiverId;
     }
 
     public String getType() {
@@ -110,12 +137,28 @@ public class TransactionHistory {
         this.amount = amount;
     }
 
-    public LocalDateTime getDate() {
-        return date;
+    public BigDecimal getConvertedAmount() {
+        return convertedAmount;
     }
 
-    public void setDate(LocalDateTime date) {
-        this.date = date;
+    public void setConvertedAmount(BigDecimal convertedAmount) {
+        this.convertedAmount = convertedAmount;
+    }
+
+    public String getSenderCurrency() {
+        return senderCurrency;
+    }
+
+    public void setSenderCurrency(String senderCurrency) {
+        this.senderCurrency = senderCurrency;
+    }
+
+    public String getReceiverCurrency() {
+        return receiverCurrency;
+    }
+
+    public void setReceiverCurrency(String receiverCurrency) {
+        this.receiverCurrency = receiverCurrency;
     }
 
     public BigDecimal getFee() {
@@ -124,5 +167,13 @@ public class TransactionHistory {
 
     public void setFee(BigDecimal fee) {
         this.fee = fee;
+    }
+
+    public LocalDateTime getDate() {
+        return date;
+    }
+
+    public void setDate(LocalDateTime date) {
+        this.date = date;
     }
 }

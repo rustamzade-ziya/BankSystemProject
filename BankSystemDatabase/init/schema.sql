@@ -54,7 +54,10 @@ CREATE TABLE transaction_history (
     tr_receiver_user_id BIGINT,
     tr_type VARCHAR(100) NOT NULL,
     tr_amount NUMERIC(12,2) NOT NULL,
+    tr_converted_amount NUMERIC(12,2),
     tr_fee NUMERIC(12,2),
+    tr_sender_currency VARCHAR(3),
+    tr_receiver_currency VARCHAR(3),
     tr_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 

@@ -4,6 +4,8 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.stereotype.Service;
 
+import java.math.BigDecimal;
+
 @Service
 public class EmailService {
 
@@ -26,22 +28,25 @@ public class EmailService {
     }
 
     // Send transfer/payment receipt
-    public void sendReceiptEmail(String to, Long senderCardId, Long receiverCardId,
-                                 String type, String amount, String fee) {
+    public void sendReceiptEmail(
+            String to,
+            Long senderCardId,
+            Long receiverCardId,
+            String type,
+            BigDecimal amount,
+            BigDecimal convertedAmount,
+            String senderCurrency,
+            String receiverCurrency,
+            BigDecimal fee
+    ) {
 
-        // Mask card IDs (show only last 4 digits)
-        String maskedSender = maskCard(senderCardId);
-        String maskedReceiver = maskCard(receiverCardId);
-
-        String messageText = String.format(
-                "Transaction Type: %s\n" +
-                        "Sender Card: %s\n" +
-                        "Receiver Card: %s\n" +
-                        "Amount: %s\n" +
-                        "Fee: %s\n\n" +
-                        "Thank you for using our bank.",
-                type, maskedSender, maskedReceiver, amount, fee
-        );
+        String messageText =
+                "Transaction Type: " + type + "\n" +
+                        "Sender Card: " + maskCard(senderCardId) + "\n" +
+                        "Receiver Card: " + maskCard(receiverCardId) + "\n" +
+                        "Amount: " + amount + " " + senderCurrency + "\n" +
+                        "Converted Amount: " + convertedAmount + " " + receiverCurrency + "\n" +
+                        "Fee: " + fee;
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);

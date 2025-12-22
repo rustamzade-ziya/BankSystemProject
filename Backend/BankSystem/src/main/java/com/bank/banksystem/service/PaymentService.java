@@ -87,22 +87,35 @@ public class PaymentService {
             debitCardRepository.save(debit);
 
 
-            transactionService.createTransaction(cardId, debit.getUser().getUser_id(), null, null, "PAYMENT",
-                    amount, BigDecimal.ZERO);
-
-            // Create transaction object for receipt
-            TransactionHistory transaction = new TransactionHistory(
+            transactionService.createTransaction(
                     cardId,
-                    null,
+                    debit.getUser().getUser_id(),
                     null,
                     null,
                     "PAYMENT",
-                    amount
+                    amount,
+                    amount,
+                    debit.getD_currency(),
+                    debit.getD_currency(),
+                    BigDecimal.ZERO
             );
-            transaction.setFee(BigDecimal.ZERO);
 
-            // Send receipt email
-            emailService.sendReceiptEmail(userEmail, cardId, null, "PAYMENT", String.valueOf(amount), null );
+            // Create transaction object for receipt
+            TransactionHistory transaction = new TransactionHistory(
+                    cardId,           // senderId
+                    null,             // senderUserId (we don't have it here)
+                    null,             // receiverId
+                    null,             // receiverUserId
+                    "PAYMENT",        // type
+                    amount,           // amount
+                    amount,           // convertedAmount (same as amount for payment)
+                    BigDecimal.ZERO,  // fee
+                    null,             // senderCurrency (unknown here)
+                    null              // receiverCurrency (unknown here)
+            );
+
+// Send receipt email
+            emailService.sendReceiptEmail(userEmail, cardId, null, "PAYMENT", amount, amount, debit.getD_currency(), debit.getD_currency(), BigDecimal.ZERO);
 
             BigDecimal cashbackAmount = BigDecimal.ZERO;
             try {
@@ -155,23 +168,36 @@ public class PaymentService {
             creditCardRepository.save(credit);
 
 
-            transactionService.createTransaction(cardId, credit.getUser().getUser_id(), null, null, "PAYMENT",
-                    amount, BigDecimal.ZERO);
-
-
-            // Create transaction object for receipt
-            TransactionHistory transaction = new TransactionHistory(
+            transactionService.createTransaction(
                     cardId,
-                    null,
+                    credit.getUser().getUser_id(),
                     null,
                     null,
                     "PAYMENT",
-                    amount
+                    amount,
+                    amount,
+                    credit.getCurrency(),
+                    credit.getCurrency(),
+                    BigDecimal.ZERO
             );
-            transaction.setFee(BigDecimal.ZERO);
 
-            // Send receipt email
-            emailService.sendReceiptEmail(userEmail, cardId, null, "PAYMENT", String.valueOf(amount), null );
+            // Create transaction object for receipt
+            TransactionHistory transaction = new TransactionHistory(
+                    cardId,           // senderId
+                    null,             // senderUserId (we don't have it here)
+                    null,             // receiverId
+                    null,             // receiverUserId
+                    "PAYMENT",        // type
+                    amount,           // amount
+                    amount,           // convertedAmount (same as amount for payment)
+                    BigDecimal.ZERO,  // fee
+                    null,             // senderCurrency (unknown here)
+                    null              // receiverCurrency (unknown here)
+            );
+
+// Send receipt email
+            emailService.sendReceiptEmail(userEmail, cardId, null, "PAYMENT", amount, amount,credit.getCurrency(), credit.getCurrency(), BigDecimal.ZERO);
+
 
             return "Payment successful";
         }

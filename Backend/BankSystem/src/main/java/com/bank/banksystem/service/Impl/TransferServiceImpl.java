@@ -170,12 +170,30 @@ public class TransferServiceImpl implements TransferService {
         debitCardRepository.save(sender);
         debitCardRepository.save(receiver);
 
-        transactionService.createTransaction(sender.getCardId(), sender.getUser().getUser_id(),
-                receiver.getCardId(), receiver.getUser().getUser_id(),
-                "DEBIT_TO_DEBIT_INTERNAL", amount, BigDecimal.ZERO);
+        transactionService.createTransaction(
+                sender.getCardId(),
+                sender.getUser().getUser_id(),
+                receiver.getCardId(),
+                receiver.getUser().getUser_id(),
+                "DEBIT_TO_DEBIT_INTERNAL",
+                amount,
+                convertedAmount,
+                sender.getD_currency(),
+                receiver.getD_currency(),
+                BigDecimal.ZERO
+        );
 
-        emailService.sendReceiptEmail(userEmail, sender.getCardId(), receiver.getCardId(),
-                "DEBIT_TO_DEBIT_INTERNAL", amount.toString(), "0");
+        emailService.sendReceiptEmail(
+                userEmail,
+                sender.getCardId(),
+                receiver.getCardId(),
+                "DEBIT_TO_DEBIT_INTERNAL",
+                amount,
+                convertedAmount,
+                sender.getD_currency(),
+                receiver.getD_currency(),
+                BigDecimal.ZERO
+        );
 
         return createSuccessResponse("Transfer from debit to debit completed. Fee: 0%");
     }
@@ -200,12 +218,31 @@ public class TransferServiceImpl implements TransferService {
         debitCardRepository.save(sender);
         creditCardRepository.save(receiver);
 
-        transactionService.createTransaction(sender.getCardId(), sender.getUser().getUser_id(),
-                receiver.getCardId(), receiver.getUser().getUser_id(),
-                "DEBIT_TO_CREDIT_INTERNAL", amount, BigDecimal.ZERO);
+        transactionService.createTransaction(
+                sender.getCardId(),
+                sender.getUser().getUser_id(),
+                receiver.getCardId(),
+                receiver.getUser().getUser_id(),
+                "DEBIT_TO_CREDIT_INTERNAL",
+                amount,
+                convertedAmount,
+                sender.getD_currency(),
+                receiver.getCurrency(),
+                BigDecimal.ZERO
+        );
 
-        emailService.sendReceiptEmail(userEmail, sender.getCardId(), receiver.getCardId(),
-                "DEBIT_TO_CREDIT_INTERNAL", amount.toString(), "0");
+
+        emailService.sendReceiptEmail(
+                userEmail,
+                sender.getCardId(),
+                receiver.getCardId(),
+                "DEBIT_TO_CREDIT_INTERNAL",
+                amount,
+                convertedAmount,
+                sender.getD_currency(),
+                receiver.getCurrency(),
+                BigDecimal.ZERO
+        );
 
         return createSuccessResponse("Transfer from debit to credit completed. Fee: 0%");
     }
@@ -232,12 +269,31 @@ public class TransferServiceImpl implements TransferService {
         creditCardRepository.save(sender);
         debitCardRepository.save(receiver);
 
-        transactionService.createTransaction(sender.getCardId(), sender.getUser().getUser_id(),
-                receiver.getCardId(), receiver.getUser().getUser_id(),
-                "CREDIT_TO_DEBIT_WITH_FEE", amount, fee);
+        transactionService.createTransaction(
+                sender.getCardId(),
+                sender.getUser().getUser_id(),
+                receiver.getCardId(),
+                receiver.getUser().getUser_id(),
+                "CREDIT_TO_DEBIT_INTERNAL",
+                amount,
+                convertedAmount,
+                sender.getCurrency(),
+                receiver.getD_currency(),
+                fee
+        );
 
-        emailService.sendReceiptEmail(userEmail, sender.getCardId(), receiver.getCardId(),
-                "CREDIT_TO_DEBIT_WITH_FEE", amount.toString(), fee.toString());
+
+        emailService.sendReceiptEmail(
+                userEmail,
+                sender.getCardId(),
+                receiver.getCardId(),
+                "CREDIT_TO_DEBIT_INTERNAL",
+                amount,
+                convertedAmount,
+                sender.getCurrency(),
+                receiver.getD_currency(),
+                fee
+        );
 
         return createSuccessResponse(String.format("Transfer from credit to debit completed. Fee: %s", fee));
     }
@@ -264,12 +320,31 @@ public class TransferServiceImpl implements TransferService {
         creditCardRepository.save(sender);
         creditCardRepository.save(receiver);
 
-        transactionService.createTransaction(sender.getCardId(), sender.getUser().getUser_id(),
-                receiver.getCardId(), receiver.getUser().getUser_id(),
-                "CREDIT_TO_CREDIT_WITH_FEE", amount, fee);
+        transactionService.createTransaction(
+                sender.getCardId(),
+                sender.getUser().getUser_id(),
+                receiver.getCardId(),
+                receiver.getUser().getUser_id(),
+                "CREDIT_TO_CREDIT_INTERNAL",
+                amount,
+                convertedAmount,
+                sender.getCurrency(),
+                receiver.getCurrency(),
+                fee
+        );
 
-        emailService.sendReceiptEmail(userEmail, sender.getCardId(), receiver.getCardId(),
-                "CREDIT_TO_CREDIT_WITH_FEE", amount.toString(), fee.toString());
+
+        emailService.sendReceiptEmail(
+                userEmail,
+                sender.getCardId(),
+                receiver.getCardId(),
+                "CREDIT_TO_CREDIT_INTERNAL",
+                amount,
+                convertedAmount,
+                sender.getCurrency(),
+                receiver.getCurrency(),
+                fee
+        );
 
         return createSuccessResponse(String.format("Transfer from credit to credit completed. Fee: %s", fee));
     }
@@ -288,12 +363,30 @@ public class TransferServiceImpl implements TransferService {
         sender.setBalance(sender.getBalance().subtract(totalAmount));
         debitCardRepository.save(sender);
 
-        transactionService.createTransaction(sender.getCardId(), sender.getUser().getUser_id(),
-                receiverAccountNumber, null,
-                "DEBIT_TO_EXTERNAL", amount, fee);
+        transactionService.createTransaction(
+                sender.getCardId(),
+                sender.getUser().getUser_id(),
+                null,
+                null,
+                "DEBIT_TO_EXTERNAL",
+                amount,
+                amount,
+                sender.getD_currency(),
+                sender.getD_currency(),
+                fee
+        );
 
-        emailService.sendReceiptEmail(userEmail, sender.getCardId(), receiverAccountNumber,
-                "DEBIT_TO_EXTERNAL", amount.toString(), fee.toString());
+        emailService.sendReceiptEmail(
+                userEmail,
+                sender.getCardId(),
+                null,
+                "DEBIT_TO_EXTERNAL",
+                amount,
+                amount,
+                sender.getD_currency(),
+                sender.getD_currency(),
+                fee
+        );
 
         return createSuccessResponse(String.format("Transfer to external completed. Fee: %s", fee));
     }
@@ -310,12 +403,30 @@ public class TransferServiceImpl implements TransferService {
         sender.setBalance(sender.getBalance().subtract(totalAmount));
         creditCardRepository.save(sender);
 
-        transactionService.createTransaction(sender.getCardId(), sender.getUser().getUser_id(),
-                receiverAccountNumber, null,
-                "CREDIT_TO_EXTERNAL_WITH_FEE", amount, fee);
+        transactionService.createTransaction(
+                sender.getCardId(),
+                sender.getUser().getUser_id(),
+                null,
+                null,
+                "CREDIT_TO_EXTERNAL",
+                amount,
+                amount,
+                sender.getCurrency(),
+                sender.getCurrency(),
+                fee
+        );
 
-        emailService.sendReceiptEmail(userEmail, sender.getCardId(), receiverAccountNumber,
-                "CREDIT_TO_EXTERNAL_WITH_FEE", amount.toString(), fee.toString());
+        emailService.sendReceiptEmail(
+                userEmail,
+                sender.getCardId(),
+                null,
+                "CREDIT_TO_EXTERNAL",
+                amount,
+                amount,
+                sender.getCurrency(),
+                sender.getCurrency(),
+                fee
+        );
 
         return createSuccessResponse(String.format("Transfer to external completed. Fee: %s", fee));
     }

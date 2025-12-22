@@ -177,6 +177,9 @@ public class CashbackService {
                     userId,
                     "CASHBACK_TO_DEBIT",
                     amount,
+                    amount,
+                    "AZN",
+                    null,
                     BigDecimal.ZERO);
 
             return "Transfer from cashback to debit card completed successfully. Amount: " + amount;
@@ -204,6 +207,9 @@ public class CashbackService {
                     userId,
                     "CASHBACK_TO_CREDIT",
                     amount,
+                    amount,
+                    "AZE",
+                    null,
                     BigDecimal.ZERO);
 
             return "Transfer from cashback to credit card completed successfully. Amount: " + amount;
@@ -236,6 +242,9 @@ public class CashbackService {
                 null,
                 "CASHBACK_PAYMENT",
                 amount,
+                amount,
+                "AZN",
+                null,
                 BigDecimal.ZERO);
 
         return "Payment successful using cashback. Amount: " + amount + ", Service: " + serviceType;

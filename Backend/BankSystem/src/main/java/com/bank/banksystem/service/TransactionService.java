@@ -13,8 +13,17 @@ public interface TransactionService {
 
     TransactionResponse getTransactionDetails(Long transactionId);
 
-    TransactionResponse createTransaction(Long senderId, Long senderUserId, Long receiverId, Long receiverUserId,
-                                          String type, BigDecimal amount,
-                                          BigDecimal fee);
+    TransactionResponse createTransaction(
+            Long senderId,
+            Long senderUserId,
+            Long receiverId,
+            Long receiverUserId,
+            String type,
+            BigDecimal amount,
+            BigDecimal convertedAmount,
+            String senderCurrency,
+            String receiverCurrency,
+            BigDecimal fee
+    );
 
 }
