@@ -50,6 +50,7 @@ public class TransferServiceImpl implements TransferService {
         this.transactionService = transactionService;
         this.emailService = emailService;
         this.userRepository = userRepository;
+        this.currencyConversionService = currencyConversionService;
     }
 
     @Override
