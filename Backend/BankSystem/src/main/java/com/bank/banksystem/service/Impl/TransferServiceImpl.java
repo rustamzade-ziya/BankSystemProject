@@ -32,7 +32,6 @@ public class TransferServiceImpl implements TransferService {
     private final UserRepository userRepository;
     private final CurrencyConversionService currencyConversionService;
 
-    // Fee constants
     private static final BigDecimal CREDIT_CARD_FEE_PERCENT = new BigDecimal("0.01"); // 1%
     private static final BigDecimal EXTERNAL_TRANSFER_FEE_PERCENT = new BigDecimal("0.005"); // 0.5%
 
