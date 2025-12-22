@@ -9,26 +9,18 @@ public class UserResponse {
     private String user_surname;
     private LocalDate user_birthday;
     private Long user_salary;
-    private String user_id_card_no_series;
-    private String user_id_card_no;
-    private String user_fin;
     private String user_phone_number;
-    private String user_codeword;
 
     //UserResponse returns back data if login is successful, notice it DOES NOT RETURN back PASSWORD
 
-    public UserResponse(Long id, String user_email, String user_name, String user_surname, LocalDate user_birthday, Long user_salary, String user_id_card_no_series, String user_id_card_no, String user_fin, String user_phone_number, String user_codeword) {
+    public UserResponse(Long id, String user_email, String user_name, String user_surname, LocalDate user_birthday, Long user_salary, String user_phone_number) {
         this.id = id;
         this.user_email = user_email;
         this.user_name = user_name;
         this.user_surname = user_surname;
         this.user_birthday = user_birthday;
         this.user_salary = user_salary;
-        this.user_id_card_no_series = user_id_card_no_series;
-        this.user_id_card_no = user_id_card_no;
-        this.user_fin = user_fin;
         this.user_phone_number = user_phone_number;
-        this.user_codeword = user_codeword;
     }
 
 
@@ -82,30 +74,6 @@ public class UserResponse {
         this.user_salary = user_salary;
     }
 
-    public String getUser_id_card_no_series() {
-        return user_id_card_no_series;
-    }
-
-    public void setUser_id_card_no_series(String user_id_card_no_series) {
-        this.user_id_card_no_series = user_id_card_no_series;
-    }
-
-    public String getUser_id_card_no() {
-        return user_id_card_no;
-    }
-
-    public void setUser_id_card_no(String user_id_card_no) {
-        this.user_id_card_no = user_id_card_no;
-    }
-
-    public String getUser_fin() {
-        return user_fin;
-    }
-
-    public void setUser_fin(String user_fin) {
-        this.user_fin = user_fin;
-    }
-
     public String getUser_phone_number() {
         return user_phone_number;
     }
@@ -114,11 +82,4 @@ public class UserResponse {
         this.user_phone_number = user_phone_number;
     }
 
-    public String getUser_codeword() {
-        return user_codeword;
-    }
-
-    public void setUser_codeword(String user_codeword) {
-        this.user_codeword = user_codeword;
-    }
 }

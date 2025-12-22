@@ -66,7 +66,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query(
             value = """
             UPDATE user_information 
-            SET user_name = :name, user_surname = :surname, user_salary = :salary, user_birthday = :birthday, user_id_card_no_series = :id_card_no_series, user_id_card_no = :id_card_no, user_fin = :fin, user_phone_number = :phone_number
+            SET user_name = :name, user_surname = :surname, user_salary = :salary, user_birthday = :birthday, user_phone_number = :phone_number
             WHERE user_id = :userId
             """,
             nativeQuery = true
@@ -77,9 +77,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
             @Param("surname") String surname,
             @Param("salary") Long salary,
             @Param("birthday") LocalDate birthday,
-            @Param("id_card_no_series")  String id_card_no_series,
-            @Param("id_card_no")   String id_card_no,
-            @Param("fin") String  fin,
             @Param("phone_number") String phone_number
     );
 

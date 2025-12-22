@@ -22,19 +22,8 @@ public class ChangeUserInformationService {
                 request.getUser_surname(),
                 request.getUser_salary(),
                 request.getUser_birthday(),
-                request.getUser_id_card_no_series(),
-                request.getUser_id_card_no(),
-                request.getUser_fin(),
                 request.getUser_phone_number()
         );
-
-        // Change password if provided
-        if (request.getUser_password() != null && !request.getUser_password().isEmpty()) {
-            userRepository.changePassword(
-                    request.getUser_id(),
-                    request.getUser_password()
-            );
-        }
 
         // Fetch updated user
         User updatedUser = userRepository.findById(request.getUser_id())
@@ -51,11 +40,7 @@ public class ChangeUserInformationService {
                 user.getUser_surname(),
                 user.getUser_birthday(),
                 user.getUser_salary(),
-                user.getUser_id_card_no_series(),
-                user.getUser_id_card_no(),
-                user.getUser_fin(),
-                user.getUser_phone_number(),
-                user.getUser_codeword());
+                user.getUser_phone_number());
     }
 }
 

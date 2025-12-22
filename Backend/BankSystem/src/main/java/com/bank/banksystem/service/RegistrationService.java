@@ -67,10 +67,6 @@ public class RegistrationService {
                 user.getUser_surname(),
                 user.getUser_birthday(),
                 user.getUser_salary(),
-                user.getUser_id_card_no_series(),
-                user.getUser_id_card_no(),
-                user.getUser_fin(),
-                user.getUser_phone_number(),
-                user.getUser_codeword());
+                user.getUser_phone_number());
     }
 }
