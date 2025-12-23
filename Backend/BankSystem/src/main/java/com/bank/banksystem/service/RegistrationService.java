@@ -48,15 +48,54 @@ public class RegistrationService {
             cashbackService.createCashbackForUser(registeredUser);
 
             return convertToUserResponse(registeredUser);
-            // error handling
+
         } catch (DataIntegrityViolationException e) {
-            String email = registrationRequest.getUser_email();
-            if (email == null) {
-                throw new RuntimeException("Email is required");
+            handleDuplicateException(e, registrationRequest);
+            throw new RuntimeException("Registration failed due to data integrity violation");
+        }
+    }
+
+    private void handleDuplicateException(DataIntegrityViolationException e,
+                                          RegistrationRequest request) {
+        String rootMessage = e.getRootCause() != null ?
+                e.getRootCause().getMessage().toLowerCase() : "";
+        String fieldValue = "";
+        String fieldName = "";
+
+        // Проверка email
+        if (rootMessage.contains("email") || rootMessage.contains("user_email")) {
+            fieldName = "Email";
+            fieldValue = request.getUser_email();
+        }
+        // Проверка FIN
+        else if (rootMessage.contains("fin") || rootMessage.contains("user_fin")) {
+            fieldName = "FIN";
+            fieldValue = request.getUser_fin();
+        }
+        // Проверка телефонного номера
+        else if (rootMessage.contains("phone") || rootMessage.contains("phone_number") ||
+                rootMessage.contains("user_phone_number")) {
+            fieldName = "Phone number";
+            fieldValue = request.getUser_phone_number();
+        }
+        // Проверка ID карты
+        else if (rootMessage.contains("id_card") || rootMessage.contains("idcardno") ||
+                rootMessage.contains("user_id_card_no")) {
+            fieldName = "ID Card number";
+            fieldValue = request.getUser_id_card_no();
+        }
+
+        // Формируем сообщение об ошибке
+        if (!fieldName.isEmpty()) {
+            if (fieldValue == null || fieldValue.trim().isEmpty()) {
+                throw new RuntimeException(fieldName + " is required");
             } else {
-                throw new RuntimeException("Email already exists: " + email);
+                throw new RuntimeException(fieldName + " already exists: " + fieldValue);
             }
         }
+
+        // Если не нашли конкретное поле
+        throw new RuntimeException("Registration failed. Please check your data");
     }
 
     private UserResponse convertToUserResponse(User user) {
@@ -67,6 +106,10 @@ public class RegistrationService {
                 user.getUser_surname(),
                 user.getUser_birthday(),
                 user.getUser_salary(),
-                user.getUser_phone_number());
+                user.getUser_id_card_no_series(),
+                user.getUser_id_card_no(),
+                user.getUser_fin(),
+                user.getUser_phone_number(),
+                user.getUser_codeword());
     }
 }
