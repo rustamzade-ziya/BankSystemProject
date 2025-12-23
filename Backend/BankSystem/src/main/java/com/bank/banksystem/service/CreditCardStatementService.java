@@ -387,6 +387,8 @@ public class CreditCardStatementService {
             });
         }
 
+
+
         BigDecimal pay = scaleMoney(amount);
 
         BigDecimal debt = safe(card.getCurrentDebt());
@@ -529,7 +531,7 @@ public class CreditCardStatementService {
         transactionService.createTransaction(
                 cardId, card.getUser().getUser_id(),
                 cardId, card.getUser().getUser_id(),
-                TYPE_LATE_FEE,
+                TYPE_INTEREST,
                 lateFee,
                 null,
                 null,
@@ -592,5 +594,3 @@ public class CreditCardStatementService {
         }
     }
 }
-
-
