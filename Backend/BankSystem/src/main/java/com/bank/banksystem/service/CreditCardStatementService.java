@@ -355,12 +355,34 @@ public class CreditCardStatementService {
                         );
                     }
                 }
+
+                if (payable.getStatus() != null && payable.getStatus().startsWith("OPEN")) {
+                    if (businessDate.isAfter(payable.getDueDate())) {
+                        throw new IllegalArgumentException(
+                                "For OPEN statement, businessDate cannot be later than dueDate (" + payable.getDueDate() + ")"
+                        );
+                    }
+                }
+
                 if ("BILLED".equals(payable.getStatus())) {
                     if (businessDate.isBefore(payable.getStatementDate())) {
                         throw new IllegalArgumentException(
                                 "For BILLED statement, businessDate cannot be earlier than statementDate (" + payable.getStatementDate() + ")"
                         );
                     }
+                }
+            });
+            //for OPEN
+            statementRepository.findLatestOpenStatementByCardId(cardId).ifPresent(open -> {
+                    if (businessDate.isAfter(open.getDueDate())) {
+                        throw new IllegalArgumentException(
+                                "For OPEN statement, businessDate cannot be later than dueDate (" + open.getDueDate() + ")"
+                        );
+                    }
+                if (businessDate.isAfter(open.getStatementDate()) && businessDate.isBefore(open.getDueDate())) {
+                    throw new IllegalArgumentException(
+                            "For OPEN statement, businessDate cannot be between statementDate and dueDate (due: " + open.getDueDate() + "statement: " + open.getStatementDate() + ")"
+                    );
                 }
             });
         }
@@ -570,4 +592,5 @@ public class CreditCardStatementService {
         }
     }
 }
+
 
