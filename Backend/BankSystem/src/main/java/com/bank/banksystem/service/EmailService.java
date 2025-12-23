@@ -62,6 +62,7 @@ public class EmailService {
 
         SimpleMailMessage message = new SimpleMailMessage();
         message.setTo(to);
+        String senderEmail = to;
         message.setSubject("Bank Transaction Receipt");
         message.setText(messageText);
 
@@ -70,19 +71,23 @@ public class EmailService {
         if (debitCardRepository.existsByCardId(receiverCardId)) {
             Long userId = debitCardRepository.getIdbyCardId(receiverCardId);
             to = userRepository.findEmailbyId(userId);
-            SimpleMailMessage message2 = new SimpleMailMessage();
-            message2.setTo(to);
-            message2.setSubject("Bank Transaction Receipt");
-            message2.setText(messageText);
-            mailSender.send(message2);
+            if (!to.equals(senderEmail)) {
+                SimpleMailMessage message2 = new SimpleMailMessage();
+                message2.setTo(to);
+                message2.setSubject("Bank Transaction Receipt");
+                message2.setText(messageText);
+                mailSender.send(message2);
+            }
         } else if (creditCardRepository.existsByCardId(receiverCardId)) {
             Long userId = creditCardRepository.getIdbyCardId(receiverCardId);
             to = userRepository.findEmailbyId(userId);
-            SimpleMailMessage message2 = new SimpleMailMessage();
-            message2.setTo(to);
-            message2.setSubject("Bank Transaction Receipt");
-            message2.setText(messageText);
-            mailSender.send(message2);
+            if (!to.equals(senderEmail)) {
+                SimpleMailMessage message2 = new SimpleMailMessage();
+                message2.setTo(to);
+                message2.setSubject("Bank Transaction Receipt");
+                message2.setText(messageText);
+                mailSender.send(message2);
+            }
         }
     }
 
