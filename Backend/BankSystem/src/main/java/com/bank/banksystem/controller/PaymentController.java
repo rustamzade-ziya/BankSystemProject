@@ -6,6 +6,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+// {
+//     "senderCardId": 649186584266491,
+//     "receiverCode": "1",
+//     "amount": 500,
+//     "serviceType": "GAS"
+// }
+
 @RestController
 @RequestMapping("/api/payments")
 public class PaymentController {
