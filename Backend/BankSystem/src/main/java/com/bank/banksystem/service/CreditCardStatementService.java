@@ -67,6 +67,11 @@ public class CreditCardStatementService {
         return statementRepository.findAllStatementsByCardIdOrderByDateDesc(cardId);
     }
 
+    public List<CreditCardStatement> getAllPayableStatements(Long cardId) {
+        if (cardId == null) return List.of();
+        return statementRepository.findPayableStatementsByCardIdOrderByDueDateAsc(cardId);
+    }
+
     public java.util.Optional<CreditCardStatement> getLatestStatement(Long cardId) {
         if (cardId == null) return java.util.Optional.empty();
         return statementRepository.findLatestStatementByCardId(cardId);
@@ -594,4 +599,3 @@ public class CreditCardStatementService {
         }
     }
 }
-
