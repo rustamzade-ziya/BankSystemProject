@@ -31,7 +31,7 @@ public class CreditCardStatementService {
     private static final int STATEMENT_PERIOD_DAYS = 20;
     private static final int GRACE_PERIOD_DAYS = 10;
 
-    private static final BigDecimal MIN_PAYMENT_RATE = new BigDecimal("0.05"); // 5%
+    private static final BigDecimal MIN_PAYMENT_RATE = new BigDecimal("0.1"); // 5%
 
     // LATE_FEE_AMOUNT is PERCENT (20 => 20% of current debt)
     private static final BigDecimal LATE_FEE_AMOUNT = new BigDecimal("20");
@@ -132,8 +132,14 @@ public class CreditCardStatementService {
             // Save period totals
             st.setPurchases(totals.purchases);
             st.setPayments(totals.payments);
-            st.setFeesCharged(totals.fees);
-            st.setInterestCharged(totals.interest);
+
+            // IMPORTANT: do NOT allow fees/interest to "drop to 0" by overwriting.
+            // Keep the larger (already accumulated) value if repository sums return 0 / smaller.
+            BigDecimal mergedFees = maxMoney(st.getFeesCharged(), totals.fees);
+            BigDecimal mergedInterest = maxMoney(st.getInterestCharged(), totals.interest);
+
+            st.setFeesCharged(mergedFees);
+            st.setInterestCharged(mergedInterest);
 
             // On BILLED statement we do NOT store closingBalance (it will be filled only at dueDate)
             st.setClosingBalance(null);
@@ -282,11 +288,16 @@ public class CreditCardStatementService {
                     null,
                     null,
                     null
-                    );
+            );
 
             // Record into latest OPEN statement (this is where new charges go)
             CreditCardStatement open = bootstrapIfMissing(cardId);
+
             open.setInterestCharged(scaleMoney(safe(open.getInterestCharged()).add(interest)));
+
+            // IMPORTANT: keep totalPaymentDue growing when interest accrues
+            addToTotalPaymentDue(open, interest);
+
             statementRepository.save(open);
 
             processed++;
@@ -321,6 +332,10 @@ public class CreditCardStatementService {
                 .orElseGet(() -> createOpenStatement(card, LocalDate.now()));
 
         open.setPayments(scaleMoney(safe(open.getPayments()).add(pay)));
+
+        // IMPORTANT: repayment should reduce totalPaymentDue (but not below 0)
+        subtractFromTotalPaymentDue(open, pay);
+
         statementRepository.save(open);
 
         // If debt fully cleared -> mark all payable statements as PAID
@@ -379,11 +394,11 @@ public class CreditCardStatementService {
             });
             //for OPEN
             statementRepository.findLatestOpenStatementByCardId(cardId).ifPresent(open -> {
-                    if (businessDate.isAfter(open.getDueDate())) {
-                        throw new IllegalArgumentException(
-                                "For OPEN statement, businessDate cannot be later than dueDate (" + open.getDueDate() + ")"
-                        );
-                    }
+                if (businessDate.isAfter(open.getDueDate())) {
+                    throw new IllegalArgumentException(
+                            "For OPEN statement, businessDate cannot be later than dueDate (" + open.getDueDate() + ")"
+                    );
+                }
                 if (businessDate.isAfter(open.getStatementDate()) && businessDate.isBefore(open.getDueDate())) {
                     throw new IllegalArgumentException(
                             "For OPEN statement, businessDate cannot be between statementDate and dueDate (due: " + open.getDueDate() + "statement: " + open.getStatementDate() + ")"
@@ -391,8 +406,6 @@ public class CreditCardStatementService {
                 }
             });
         }
-
-
 
         BigDecimal pay = scaleMoney(amount);
 
@@ -546,7 +559,12 @@ public class CreditCardStatementService {
 
         // Record late fee into latest OPEN statement (NOT into the old overdue/billed one)
         CreditCardStatement open = bootstrapIfMissing(cardId);
+
         open.setFeesCharged(scaleMoney(safe(open.getFeesCharged()).add(lateFee)));
+
+        // IMPORTANT: keep totalPaymentDue growing when late fee accrues
+        addToTotalPaymentDue(open, lateFee);
+
         statementRepository.save(open);
     }
 
@@ -556,6 +574,41 @@ public class CreditCardStatementService {
 
     private BigDecimal scaleMoney(BigDecimal v) {
         return safe(v).setScale(2, RoundingMode.HALF_UP);
+    }
+
+    private BigDecimal maxMoney(BigDecimal a, BigDecimal b) {
+        BigDecimal aa = scaleMoney(a);
+        BigDecimal bb = scaleMoney(b);
+        return aa.max(bb);
+    }
+
+    /**
+     * Increase totalPaymentDue by delta (delta >= 0), keep >= 0, and refresh minPaymentDue.
+     */
+    private void addToTotalPaymentDue(CreditCardStatement st, BigDecimal delta) {
+        BigDecimal d = scaleMoney(delta);
+        if (d.compareTo(BigDecimal.ZERO) <= 0) return;
+
+        BigDecimal current = scaleMoney(st.getTotalPaymentDue());
+        BigDecimal updated = current.add(d);
+
+        st.setTotalPaymentDue(scaleMoney(updated));
+        st.setMinPaymentDue(scaleMoney(updated.multiply(MIN_PAYMENT_RATE)));
+    }
+
+    /**
+     * Decrease totalPaymentDue by amount (amount >= 0), keep >= 0, and refresh minPaymentDue.
+     */
+    private void subtractFromTotalPaymentDue(CreditCardStatement st, BigDecimal amount) {
+        BigDecimal a = scaleMoney(amount);
+        if (a.compareTo(BigDecimal.ZERO) <= 0) return;
+
+        BigDecimal current = scaleMoney(st.getTotalPaymentDue());
+        BigDecimal updated = current.subtract(a);
+        if (updated.compareTo(BigDecimal.ZERO) < 0) updated = BigDecimal.ZERO;
+
+        st.setTotalPaymentDue(scaleMoney(updated));
+        st.setMinPaymentDue(scaleMoney(updated.multiply(MIN_PAYMENT_RATE)));
     }
 
     /**
